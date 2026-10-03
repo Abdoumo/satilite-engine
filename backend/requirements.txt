@@ -12,3 +12,6 @@ rasterio
 netCDF4
 apscheduler
 httpx
+opencv-python-headless
+ultralytics
+psycopg2-binary
