@@ -17,6 +17,7 @@ export function PipelineMap({ pipelines, segments, alerts, setHoverLocation }: P
     const [showStyleMenu, setShowStyleMenu] = useState(false);
     
     const mapRef = useRef<any>(null);
+    const hoverTimeoutRef = useRef<any>(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchMarker, setSearchMarker] = useState<[number, number] | null>(null);
 
@@ -103,7 +104,12 @@ export function PipelineMap({ pipelines, segments, alerts, setHoverLocation }: P
                 mapboxAccessToken={mapboxToken}
                 onMouseMove={(e) => {
                     if (e.lngLat) {
-                        setHoverLocation({ longitude: e.lngLat.lng, latitude: e.lngLat.lat });
+                        if (!hoverTimeoutRef.current) {
+                            hoverTimeoutRef.current = setTimeout(() => {
+                                setHoverLocation({ longitude: e.lngLat.lng, latitude: e.lngLat.lat });
+                                hoverTimeoutRef.current = null;
+                            }, 500); // Throttle to 2 updates per second
+                        }
                     }
                 }}
             >
